@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using NanoHass.Context;
 
 namespace NanoHass.Discovery {
@@ -8,7 +9,7 @@ namespace NanoHass.Discovery {
     public abstract class AbstractDiscoverable {
         private BaseDiscoveryModel          mDeviceDiscoveryModel;
 
-        protected IHassClientContext        ContextProvider;
+        protected IHassClientContext        ClientContext;
 
         public  string                      ObjectId { get; set; }
         public  string                      Name { get; }
@@ -37,7 +38,7 @@ namespace NanoHass.Discovery {
         }
 
         public void InitializeParameters( IHassClientContext contextProvider ) {
-            ContextProvider = contextProvider;
+            ClientContext = contextProvider;
         }
 
         public virtual string                   GetAttributes() => String.Empty;
@@ -45,7 +46,7 @@ namespace NanoHass.Discovery {
 
         protected abstract BaseDiscoveryModel   CreateDiscoveryModel();
         public abstract string                  GetCombinedState();
-//        public abstract IList<DeviceTopicState> GetStatesToPublish();
+        public abstract IList                   GetStatesToPublish();
 
         public BaseDiscoveryModel GetDiscoveryModel() =>
             mDeviceDiscoveryModel ??= CreateDiscoveryModel();

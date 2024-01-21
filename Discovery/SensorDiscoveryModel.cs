@@ -1,4 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace NanoHass.Discovery {
     public class SensorDiscoveryModel : BaseDiscoveryModel {
