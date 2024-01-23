@@ -9,12 +9,13 @@ namespace NanoHass.Sensors {
         private const string                    cSensorName = "unknown sensor";
 
         private readonly SensorConfiguration    mConfiguration;
-        private int                             mState;
+        private string                          mValue;
 
         protected BaseSensor( SensorConfiguration configuration ) :
-            base( configuration.Name ?? cSensorName, Constants.SensorDomain, configuration.UpdateIntervalInSeconds ) {
+            base( configuration.Name ?? cSensorName, Constants.SensorDomain, configuration.Identifier,
+                  configuration.UpdateIntervalInSeconds ) {
             mConfiguration = configuration;
-            mState = 1;
+            mValue = String.Empty;
         }
 
         protected override BaseDiscoveryModel CreateDiscoveryModel() {
@@ -24,7 +25,7 @@ namespace NanoHass.Sensors {
 
             return new SensorDiscoveryModel {
                 availability_topic = ClientContext.DeviceAvailabilityTopic(),
-                state_topic = $"{ClientContext.SensorStateTopic( Domain, mConfiguration.Name.ToLower())}",
+                state_topic = $"{ClientContext.SensorStateTopic( Domain, mConfiguration.Identifier )}",
                 name = Name,
                 unique_id = Id,
                 icon = mConfiguration.Icon,
@@ -52,10 +53,10 @@ namespace NanoHass.Sensors {
         public override string GetCombinedState() =>
             GetState();
 
-        protected virtual string GetState() {
-            mState += 1;
+        protected virtual string GetState() =>
+            mValue;
 
-            return mState.ToString();
-        }
+        public void SetValue( string value ) =>
+            mValue = value;
     }
 }

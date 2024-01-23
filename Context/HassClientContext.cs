@@ -21,8 +21,8 @@ namespace NanoHass.Context {
         string              DeviceAvailabilityTopic();
         string              DeviceMessageSubscriptionTopic();
 
+        string              SensorConfigurationTopic( string forDomain, string sensorName );
         string              SensorStateTopic( string forDomain, string sensorName );
-        string              SensorConfigurationTopic( string forDomain );
     }
 
     public class HassClientContext : IHassClientContext {
@@ -65,8 +65,8 @@ namespace NanoHass.Context {
         public string SensorStateTopic( string forDomain, string sensorName ) =>
             $"{SensorTopic( forDomain )}/{sensorName}/{Constants.State}";
 
-        public string SensorConfigurationTopic( string forDomain ) =>
-            $"{SensorTopic( forDomain )}/{Constants.Configuration}";
+        public string SensorConfigurationTopic( string forDomain, string sensorName ) =>
+            $"{SensorTopic( forDomain )}_{sensorName}/{Constants.Configuration}";
 
         public string DeviceAvailabilityTopic() =>
             $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceName}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";

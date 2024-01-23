@@ -11,6 +11,8 @@ namespace NanoHass.Sensors {
 
         void    StartUpdating();
         void    StopUpdating();
+
+        void    UpdateSensorValue( string sensorName, object sensorValue );
     }
 
     internal class SensorManager : ISensorManager {
@@ -49,6 +51,16 @@ namespace NanoHass.Sensors {
 
         public void StopUpdating() {
             mTaskScheduler.Stop( nameof( SensorManager ));
+        }
+
+        public void UpdateSensorValue( string sensorName, object sensorValue ) {
+            foreach( var item in mSensors ) {
+                if( item is BaseSensor sensor ) {
+                    if( sensor.Id.Equals( sensorName )) {
+                        sensor.SetValue( sensorValue.ToString());
+                    }
+                }
+            }
         }
 
         private void UpdateSensors() {

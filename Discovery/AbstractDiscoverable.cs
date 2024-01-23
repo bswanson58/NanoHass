@@ -23,8 +23,8 @@ namespace NanoHass.Discovery {
         public string                       PreviousPublishedState { get; private set; }
         public string                       PreviousPublishedAttributes { get; private set; }
 
-        protected AbstractDiscoverable( string name, string domain,
-                                        int updateIntervalSeconds = 10, string id = default, bool useAttributes = false ) {
+        protected AbstractDiscoverable( string name, string domain, string id,
+                                        int updateIntervalSeconds = 10, bool useAttributes = false ) {
             Name = name;
             Domain = domain;
             UseAttributes = useAttributes;
