@@ -50,18 +50,6 @@ namespace NanoHass.Discovery {
         public string json_attributes_topic { get; set; }
 
         /// <summary>
-        /// (Optional) The payload that represents the available state.
-        /// </summary>
-        /// <value></value>
-        public string payload_available { get; set; }
-
-        /// <summary>
-        /// (Optional) The payload that represents the unavailable state.
-        /// </summary>
-        /// <value></value>
-        public string payload_not_available { get; set; }
-
-        /// <summary>
         /// (Optional) The maximum QoS level of the state topic.
         /// </summary>
         /// <value></value>

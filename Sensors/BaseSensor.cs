@@ -6,11 +6,16 @@ using System.Collections;
 
 namespace NanoHass.Sensors {
     public class BaseSensor : AbstractDiscoverable {
-        private const string   cSensorName = "unknown sensor";
+        private const string                    cSensorName = "unknown sensor";
 
-        public BaseSensor( string name, 
-                           int updateIntervalSeconds = 10, string id = default, bool useAttributes = false ) :
-            base( name ?? cSensorName, Constants.SensorDomain, updateIntervalSeconds, id, useAttributes ) { }
+        private readonly SensorConfiguration    mConfiguration;
+        private int                             mState;
+
+        protected BaseSensor( SensorConfiguration configuration ) :
+            base( configuration.Name ?? cSensorName, Constants.SensorDomain, configuration.UpdateIntervalInSeconds ) {
+            mConfiguration = configuration;
+            mState = 1;
+        }
 
         protected override BaseDiscoveryModel CreateDiscoveryModel() {
             if( ClientContext == null ) {
@@ -19,10 +24,16 @@ namespace NanoHass.Sensors {
 
             return new SensorDiscoveryModel {
                 availability_topic = ClientContext.DeviceAvailabilityTopic(),
+                state_topic = $"{ClientContext.SensorStateTopic( Domain, mConfiguration.Name.ToLower())}",
                 name = Name,
                 unique_id = Id,
+                icon = mConfiguration.Icon,
                 device = ClientContext.DeviceConfiguration,
-                state_topic = $"{ClientContext.DeviceBaseTopic( Domain )}/{ObjectId}/{Constants.State}/{Constants.Status}"
+                device_class = mConfiguration.DeviceClass,
+                unit_of_measurement = mConfiguration.MeasurementUnit,
+                json_attributes_topic = String.Empty,
+                json_attributes_template = String.Empty,
+                value_template = String.Empty, // {{ value_json.humidity}}
             };
         }
 
@@ -41,7 +52,10 @@ namespace NanoHass.Sensors {
         public override string GetCombinedState() =>
             GetState();
 
-        protected virtual string GetState() =>
-            String.Empty;
+        protected virtual string GetState() {
+            mState += 1;
+
+            return mState.ToString();
+        }
     }
 }

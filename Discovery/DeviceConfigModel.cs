@@ -49,6 +49,6 @@ namespace NanoHass.Discovery {
         /// This is used to show device topology in Home Assistant.
         /// </summary>
         /// <value></value>
-        public string via_device { get; set; }
+//        public string via_device { get; set; }
     }
 }

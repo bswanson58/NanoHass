@@ -11,7 +11,7 @@ namespace NanoHass.Discovery {
 
         protected IHassClientContext        ClientContext;
 
-        public  string                      ObjectId { get; set; }
+//        public  string                      ObjectId { get; set; }
         public  string                      Name { get; }
         public  string                      Id { get; }
         public  string                      Domain { get; }

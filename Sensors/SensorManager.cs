@@ -8,6 +8,9 @@ using NanoPlat.Tasks;
 namespace NanoHass.Sensors {
     public interface ISensorManager {
         void    AddSensor( BaseSensor sensor );
+
+        void    StartUpdating();
+        void    StopUpdating();
     }
 
     internal class SensorManager : ISensorManager {
@@ -27,19 +30,25 @@ namespace NanoHass.Sensors {
 
             mLogger = log.SetLogLevel( nameof( SensorManager ));
 
-            foreach( var device in devices.Devices ) {
+            foreach( var device in devices.GetDevices()) {
                 if( device is SensorConfiguration sensor ) {
                     AddSensor( new Sensor( sensor ));
                 }
             }
-
-            mTaskScheduler.Start( UpdateSensors, (int)TimeSpan.FromSeconds( 5 ).TotalMilliseconds, nameof( SensorManager ));
         }
 
         public void AddSensor( BaseSensor sensor ) {
             sensor.InitializeParameters( mHassManager.ClientContext );
 
             mSensors.Add( sensor );
+        }
+
+        public void StartUpdating() {
+            mTaskScheduler.Start( UpdateSensors, (int)TimeSpan.FromSeconds( 3 ).TotalMilliseconds, nameof( SensorManager ));
+        }
+
+        public void StopUpdating() {
+            mTaskScheduler.Stop( nameof( SensorManager ));
         }
 
         private void UpdateSensors() {
@@ -50,15 +59,13 @@ namespace NanoHass.Sensors {
 
                 // publish availability & sensor discovery every 30 sec
                 if(( DateTime.UtcNow - mLastAutoDiscoPublish ).TotalSeconds > 30 ) {
-                    // publish the auto discovery
                     foreach( var sensor in mSensors ) {
-                        mHassManager.PublishAutoDiscoveryConfiguration( sensor as BaseSensor );
+                        mHassManager.PublishDiscoveryConfiguration( sensor as BaseSensor );
                     }
 
                     mLastAutoDiscoPublish = DateTime.UtcNow;
                 }
 
-                // publish sensor states (they have their own time-based scheduling)
                 foreach( var sensor in mSensors ) {
                     mHassManager.PublishState( sensor as BaseSensor );
                 }

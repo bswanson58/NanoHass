@@ -2,6 +2,6 @@
     public class Sensor : BaseSensor {
 
         public Sensor( SensorConfiguration configuration )
-            : base( configuration.Name, configuration.UpdateIntervalInSeconds, configuration.SensorId ) { }
+            : base( configuration ) { }
     }
 }
