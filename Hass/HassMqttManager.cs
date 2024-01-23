@@ -16,6 +16,7 @@ namespace NanoHass.Hass {
         void    StopProcessing();
 
         void    PublishDiscoveryConfiguration( AbstractDiscoverable discoverable );
+        void    RevokeDiscoveryConfiguration( AbstractDiscoverable discoverable );
         void    PublishState( AbstractDiscoverable device, bool respectChecks = true );
 
         IHassClientContext  ClientContext { get; }

@@ -7,6 +7,7 @@ using NanoPlat.Mqtt;
 namespace NanoHass.Context {
     public interface IHassClientContext {
         DeviceConfigModel   DeviceConfiguration { get; }
+        string              DeviceIdentifier { get; }
 
         string              ServerAddress { get; }
         string              UserName { get; }
@@ -30,6 +31,7 @@ namespace NanoHass.Context {
         private readonly HassConfiguration  mHassConfiguration;
 
         public  DeviceConfigModel           DeviceConfiguration { get; }
+        public  string                      DeviceIdentifier => mHassConfiguration.DeviceIdentifier;
 
         public  string                      ServerAddress => mMqttConfiguration.BrokerAddress;
         public  string                      UserName => mMqttConfiguration.Username;
@@ -66,7 +68,7 @@ namespace NanoHass.Context {
             $"{SensorTopic( forDomain )}/{sensorName}/{Constants.State}";
 
         public string SensorConfigurationTopic( string forDomain, string sensorName ) =>
-            $"{SensorTopic( forDomain )}_{sensorName}/{Constants.Configuration}";
+            $"{SensorTopic( forDomain )}/{sensorName}/{Constants.Configuration}";
 
         public string DeviceAvailabilityTopic() =>
             $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";

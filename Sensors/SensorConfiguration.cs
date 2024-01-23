@@ -4,6 +4,7 @@ using NanoPlat.Configuration.Metadata;
 namespace NanoHass.Sensors {
     public class SensorConfiguration : ConfigurationSection {
         public  string      DisplayName {  get; set;}
+        public  string      UniqueIdentifier { get; set; }
         public  string      Identifier { get; set; }
         public  string      Icon { get; set; }
         public  string      DeviceClass { get; set; }
@@ -13,25 +14,28 @@ namespace NanoHass.Sensors {
         public SensorConfiguration() {
             DisplayName = String.Empty;
             Identifier = String.Empty;
+            UniqueIdentifier = String.Empty;
             Icon = String.Empty;
             UpdateIntervalInSeconds = 5;
         }
 
-        public SensorConfiguration( string displayName, string identifier,
+        public SensorConfiguration( string displayName, string identifier, string uniqueIdentifier,
                                     string deviceClass = "", string measurementUnit = "", string icon = "",
                                     int updateInterval = 5 ) {
             DisplayName = displayName;
             Identifier = identifier;
+            UniqueIdentifier = uniqueIdentifier;
             DeviceClass = deviceClass;
             MeasurementUnit = measurementUnit;
             UpdateIntervalInSeconds = updateInterval;
             Icon = icon;
         }
 
-        public SensorConfiguration( string displayName, string identifier, TimeSpan updateInterval,
+        public SensorConfiguration( string displayName, string identifier, string uniqueIdentifier, TimeSpan updateInterval,
                                     string deviceClass = "", string measurementUnit = "", string icon = "" ) {
             DisplayName = displayName;
             Identifier = identifier;
+            UniqueIdentifier = uniqueIdentifier;
             DeviceClass = deviceClass;
             MeasurementUnit = measurementUnit;
             UpdateIntervalInSeconds = (int)updateInterval.TotalSeconds;

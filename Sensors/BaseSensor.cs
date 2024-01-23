@@ -28,12 +28,13 @@ namespace NanoHass.Sensors {
                 availability_topic = ClientContext.DeviceAvailabilityTopic(),
                 state_topic = $"{ClientContext.SensorStateTopic( Domain, mConfiguration.Identifier )}",
                 name = Name,
-                unique_id = Id,
+                unique_id = mConfiguration.UniqueIdentifier,
+                object_id = $"{ClientContext.DeviceIdentifier}_{mConfiguration.Identifier}",
                 icon = mConfiguration.Icon,
                 device = ClientContext.DeviceConfiguration,
                 device_class = mConfiguration.DeviceClass,
                 unit_of_measurement = mConfiguration.MeasurementUnit,
-                value_template = "{{ value_json.value}}",
+                value_template = "{{ value_json.value|default(0)}}",
             };
         }
 

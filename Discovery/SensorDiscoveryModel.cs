@@ -64,6 +64,11 @@ namespace NanoHass.Discovery {
         public string unique_id { get; set; }
 
         /// <summary>
+        /// (Optional) Used instead of name for automatic generation of entity_id
+        /// </summary>
+        public string object_id { get; set; }
+
+        /// <summary>
         /// (Optional) Defines the units of measurement of the sensor, if any.
         /// </summary>
         /// <value></value>
