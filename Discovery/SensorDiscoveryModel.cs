@@ -40,14 +40,14 @@ namespace NanoHass.Discovery {
         /// (Optional) Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.
         /// </summary>
         /// <value></value>
-        public string json_attributes_template { get; set; }
+//        public string json_attributes_template { get; set; }
 
         /// <summary>
         /// (Optional) The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.
         /// Implies force_update of the current sensor state when a message is received on this topic.
         /// </summary>
         /// <value></value>
-        public string json_attributes_topic { get; set; }
+//        public string json_attributes_topic { get; set; }
 
         /// <summary>
         /// (Optional) The maximum QoS level of the state topic.

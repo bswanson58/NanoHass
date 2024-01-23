@@ -3,16 +3,17 @@ using NanoHass.Models;
 using NanoHass.Support;
 using System;
 using System.Collections;
+using nanoFramework.Json;
 
 namespace NanoHass.Sensors {
     public class BaseSensor : AbstractDiscoverable {
-        private const string                    cSensorName = "unknown sensor";
+        private const string                    cSensorName = "Unknown Sensor";
 
         private readonly SensorConfiguration    mConfiguration;
         private string                          mValue;
 
         protected BaseSensor( SensorConfiguration configuration ) :
-            base( configuration.Name ?? cSensorName, Constants.SensorDomain, configuration.Identifier,
+            base( configuration.DisplayName ?? cSensorName, Constants.SensorDomain, configuration.Identifier,
                   configuration.UpdateIntervalInSeconds ) {
             mConfiguration = configuration;
             mValue = String.Empty;
@@ -32,9 +33,7 @@ namespace NanoHass.Sensors {
                 device = ClientContext.DeviceConfiguration,
                 device_class = mConfiguration.DeviceClass,
                 unit_of_measurement = mConfiguration.MeasurementUnit,
-                json_attributes_topic = String.Empty,
-                json_attributes_template = String.Empty,
-                value_template = String.Empty, // {{ value_json.humidity}}
+                value_template = "{{ value_json.value}}",
             };
         }
 
@@ -53,8 +52,9 @@ namespace NanoHass.Sensors {
         public override string GetCombinedState() =>
             GetState();
 
-        protected virtual string GetState() =>
-            mValue;
+        protected virtual string GetState() {
+            return JsonSerializer.SerializeObject( new Hashtable {{ "value", mValue }});
+        }
 
         public void SetValue( string value ) =>
             mValue = value;

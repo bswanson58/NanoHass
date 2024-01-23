@@ -17,7 +17,7 @@ namespace NanoHass.Discovery {
         /// (Optional) An Id to identify the device. For example a serial number.
         /// </summary>
         /// <value></value>
-        public string identifiers { get; set; }
+        public string[] identifiers { get; set; }
 
         /// <summary>
         /// (Optional) The manufacturer of the device.

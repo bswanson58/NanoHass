@@ -14,7 +14,7 @@ namespace NanoHass.Hass {
             Configuration = new HassConfiguration();
         }
 
-        public void AddDevice( SensorConfiguration configuration ) =>
+        public void AddSensor( SensorConfiguration configuration ) =>
             mDevices.Add( configuration );
 
         public ArrayList GetDevices() =>

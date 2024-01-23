@@ -46,8 +46,8 @@ namespace NanoHass.Context {
 
             DeviceConfiguration = new DeviceConfigModel {
                 manufacturer = options.Configuration.Manufacturer,
-                name = options.Configuration.DeviceIdentifier,
-                identifiers = options.Configuration.DeviceIdentifier,
+                name = options.Configuration.DeviceName,
+                identifiers = new []{ options.Configuration.DeviceIdentifier },
                 model = options.Configuration.Model,
                 sw_version = options.Configuration.Version
             };
@@ -69,7 +69,7 @@ namespace NanoHass.Context {
             $"{SensorTopic( forDomain )}_{sensorName}/{Constants.Configuration}";
 
         public string DeviceAvailabilityTopic() =>
-            $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceName}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";
+            $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";
 
         public string DeviceMessageSubscriptionTopic() =>
             $"{mHassConfiguration.DiscoveryPrefix}/+/{DeviceConfiguration.name}/#";

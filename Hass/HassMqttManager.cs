@@ -137,9 +137,9 @@ namespace NanoHass.Hass {
                     }
                 }
 
-                if( device.UseAttributes ) {
-                    mMqttManager.Publish( autoDiscoConfig.json_attributes_topic, attributes );
-                }
+//                if( device.UseAttributes ) {
+//                    mMqttManager.Publish( autoDiscoConfig.json_attributes_topic, attributes );
+//                }
 
                 // only store the values if the checks are respected
                 // otherwise, we might stay in 'unknown' state until the value changes

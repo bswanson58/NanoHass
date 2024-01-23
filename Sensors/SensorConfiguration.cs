@@ -3,7 +3,7 @@ using NanoPlat.Configuration.Metadata;
 
 namespace NanoHass.Sensors {
     public class SensorConfiguration : ConfigurationSection {
-        public  string      Name {  get; set;}
+        public  string      DisplayName {  get; set;}
         public  string      Identifier { get; set; }
         public  string      Icon { get; set; }
         public  string      DeviceClass { get; set; }
@@ -11,16 +11,16 @@ namespace NanoHass.Sensors {
         public  int         UpdateIntervalInSeconds { get; set; }
 
         public SensorConfiguration() {
-            Name = String.Empty;
+            DisplayName = String.Empty;
             Identifier = String.Empty;
             Icon = String.Empty;
             UpdateIntervalInSeconds = 5;
         }
 
-        public SensorConfiguration( string name, string identifier,
+        public SensorConfiguration( string displayName, string identifier,
                                     string deviceClass = "", string measurementUnit = "", string icon = "",
                                     int updateInterval = 5 ) {
-            Name = name;
+            DisplayName = displayName;
             Identifier = identifier;
             DeviceClass = deviceClass;
             MeasurementUnit = measurementUnit;
@@ -28,9 +28,9 @@ namespace NanoHass.Sensors {
             Icon = icon;
         }
 
-        public SensorConfiguration( string name, string identifier, TimeSpan updateInterval,
+        public SensorConfiguration( string displayName, string identifier, TimeSpan updateInterval,
                                     string deviceClass = "", string measurementUnit = "", string icon = "" ) {
-            Name = name;
+            DisplayName = displayName;
             Identifier = identifier;
             DeviceClass = deviceClass;
             MeasurementUnit = measurementUnit;
@@ -39,8 +39,8 @@ namespace NanoHass.Sensors {
         }
 
         public override ConfigurationDescription GetSectionDescription() =>
-            new ( Name, new [] {
-                new ParameterDescription( nameof( Name ), ParameterType.String, "Name of this device", 1 ),
+            new ( DisplayName, new [] {
+                new ParameterDescription( nameof( DisplayName ), ParameterType.String, "Displayed name of this device", 1 ),
                 new ParameterDescription( nameof( Identifier ), ParameterType.String, "Identifier for this device", 1 ),
                 new ParameterDescription( nameof( DeviceClass ), ParameterType.String, "Device class of the sensor", 3 ),
                 new ParameterDescription( nameof( MeasurementUnit ), ParameterType.String, "The sensor values unit of measurement", 4 ),
