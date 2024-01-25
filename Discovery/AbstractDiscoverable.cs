@@ -11,9 +11,8 @@ namespace NanoHass.Discovery {
 
         protected IHassClientContext        ClientContext;
 
-//        public  string                      ObjectId { get; set; }
         public  string                      Name { get; }
-        public  string                      Id { get; }
+        public  string                      EntityIdentifier { get; }
         public  string                      Domain { get; }
 
         public bool                         UseAttributes { get; }
@@ -23,13 +22,13 @@ namespace NanoHass.Discovery {
         public string                       PreviousPublishedState { get; private set; }
         public string                       PreviousPublishedAttributes { get; private set; }
 
-        protected AbstractDiscoverable( string name, string domain, string id,
+        protected AbstractDiscoverable( string name, string domain, string entityIdentifier,
                                         int updateIntervalSeconds = 10, bool useAttributes = false ) {
             Name = name;
             Domain = domain;
-            UseAttributes = useAttributes;
+            EntityIdentifier = string.IsNullOrEmpty( entityIdentifier ) ? Guid.NewGuid().ToString() : entityIdentifier;
 
-            Id = string.IsNullOrEmpty( id ) ? Guid.NewGuid().ToString() : id;
+            UseAttributes = useAttributes;
             UpdateIntervalSeconds = updateIntervalSeconds;
 
             LastUpdated = DateTime.MinValue;
@@ -37,16 +36,17 @@ namespace NanoHass.Discovery {
             PreviousPublishedAttributes = string.Empty;
         }
 
-        public void InitializeParameters( IHassClientContext contextProvider ) {
-            ClientContext = contextProvider;
-        }
-
         public virtual string                   GetAttributes() => String.Empty;
         public virtual bool                     ProcessMessage( string topic, string payload ) => false;
 
         protected abstract BaseDiscoveryModel   CreateDiscoveryModel();
-        public abstract string                  GetCombinedState();
+        public abstract string                  GetDiscoveryPayload();
+        public abstract string                  GetState();
         public abstract IList                   GetStatesToPublish();
+
+        public void InitializeParameters( IHassClientContext contextProvider ) {
+            ClientContext = contextProvider;
+        }
 
         public BaseDiscoveryModel GetDiscoveryModel() =>
             mDeviceDiscoveryModel ??= CreateDiscoveryModel();

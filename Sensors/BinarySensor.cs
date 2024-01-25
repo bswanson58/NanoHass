@@ -3,12 +3,14 @@ using NanoHass.Support;
 using System;
 
 namespace NanoHass.Sensors {
-    public class Sensor : BaseSensor {
-        private readonly SensorConfiguration    mConfiguration;
+    public class BinarySensor : BaseSensor {
+        private readonly BinarySensorConfiguration  mConfiguration;
 
-        public Sensor( SensorConfiguration configuration )
+        public BinarySensor( BinarySensorConfiguration configuration )
             : base( configuration ) {
             mConfiguration = configuration;
+
+            SetState( mConfiguration.OffPayload );
         }
 
         protected override BaseDiscoveryModel CreateDiscoveryModel() {
@@ -16,23 +18,24 @@ namespace NanoHass.Sensors {
                 return null;
             }
 
-            return new SensorDiscoveryModel {
+            return new BinarySensorDiscoveryModel {
                 availability_topic = ClientContext.DeviceAvailabilityTopic(),
                 state_topic = $"{ClientContext.SensorStateTopic( Domain, mConfiguration.EntityIdentifier )}",
                 name = Name,
                 unique_id = mConfiguration.UniqueIdentifier,
                 object_id = $"{ClientContext.DeviceIdentifier}_{mConfiguration.EntityIdentifier}",
                 icon = mConfiguration.Icon,
+                payload_on = mConfiguration.OnPayload,
+                payload_off = mConfiguration.OffPayload,
                 device = ClientContext.DeviceConfiguration,
                 device_class = mConfiguration.DeviceClass,
                 enabled_by_default = true,
-                unit_of_measurement = mConfiguration.MeasurementUnit,
                 value_template = "{{value_json.value}}",
             };
         }
 
         public override string GetDiscoveryPayload() {
-            if( GetDiscoveryModel() is SensorDiscoveryModel discoveryModel ) {
+            if( GetDiscoveryModel() is BinarySensorDiscoveryModel discoveryModel ) {
                 return discoveryModel.AsJson();
             }
 

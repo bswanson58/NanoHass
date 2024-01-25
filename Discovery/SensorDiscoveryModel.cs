@@ -2,6 +2,10 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
 namespace NanoHass.Discovery {
+    // from: https://www.home-assistant.io/integrations/sensor.mqtt/
+    // device classes: https://www.home-assistant.io/integrations/sensor/
+    // constants, units of measure: https://github.com/home-assistant/core/blob/d7ac4bd65379e11461c7ce0893d3533d8d8b8cbf/homeassistant/const.py
+
     public class SensorDiscoveryModel : BaseDiscoveryModel {
         /// <summary>
         /// (Optional) The MQTT topic subscribed to receive availability (online/offline) updates.
@@ -15,6 +19,11 @@ namespace NanoHass.Discovery {
         /// </summary>
         /// <value></value>
         public string device_class { get; set; }
+
+        /// <summary>
+        /// (Optional, default: true) Flag which defines if the entity should be enabled when first added.
+        /// </summary>
+        public bool enabled_by_default { get; set; }
 
         /// <summary>
         /// (Optional) Defines the number of seconds after the sensor’s state expires, if it’s not updated.
@@ -40,14 +49,14 @@ namespace NanoHass.Discovery {
         /// (Optional) Defines a template to extract the JSON dictionary from messages received on the json_attributes_topic.
         /// </summary>
         /// <value></value>
-//        public string json_attributes_template { get; set; }
+        public string json_attributes_template { get; set; }
 
         /// <summary>
         /// (Optional) The MQTT topic subscribed to receive a JSON dictionary payload and then set as sensor attributes.
         /// Implies force_update of the current sensor state when a message is received on this topic.
         /// </summary>
         /// <value></value>
-//        public string json_attributes_topic { get; set; }
+        public string json_attributes_topic { get; set; }
 
         /// <summary>
         /// (Optional) The maximum QoS level of the state topic.

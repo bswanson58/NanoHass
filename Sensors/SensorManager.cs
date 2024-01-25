@@ -36,6 +36,9 @@ namespace NanoHass.Sensors {
                 if( device is SensorConfiguration sensor ) {
                     AddSensor( new Sensor( sensor ));
                 }
+                if( device is BinarySensorConfiguration binarySensor ) {
+                    AddSensor( new BinarySensor( binarySensor ));
+                }
             }
         }
 
@@ -53,11 +56,11 @@ namespace NanoHass.Sensors {
             mTaskScheduler.Stop( nameof( SensorManager ));
         }
 
-        public void UpdateSensorValue( string sensorName, object sensorValue ) {
+        public void UpdateSensorValue( string entityIdentifier, object sensorValue ) {
             foreach( var item in mSensors ) {
                 if( item is BaseSensor sensor ) {
-                    if( sensor.Id.Equals( sensorName )) {
-                        sensor.SetValue( sensorValue.ToString());
+                    if( sensor.EntityIdentifier.Equals( entityIdentifier )) {
+                        sensor.SetState( sensorValue.ToString());
                     }
                 }
             }

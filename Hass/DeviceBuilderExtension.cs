@@ -17,6 +17,9 @@ namespace NanoHass.Hass {
         public void AddSensor( SensorConfiguration configuration ) =>
             mDevices.Add( configuration );
 
+        public void AddBinarySensor( BinarySensorConfiguration configuration ) =>
+            mDevices.Add( configuration );
+
         public ArrayList GetDevices() =>
             mDevices;
     }

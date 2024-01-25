@@ -7,6 +7,12 @@ namespace NanoHass.Discovery {
     /// </summary>
     public abstract class BaseDiscoveryModel {
         /// <summary>
+        /// (Required) The MQTT topic subscribed to receive sensor values.
+        /// </summary>
+        /// <value></value>
+        public string state_topic { get; set; }
+
+        /// <summary>
         /// (Optional) Information about the device this sensor is a part of to tie it into the device registry.
         /// Only works through MQTT discovery and when unique_id is set.
         /// </summary>
@@ -18,11 +24,5 @@ namespace NanoHass.Discovery {
         /// </summary>
         /// <value></value>
         public string name { get; set; }
-
-        /// <summary>
-        /// The MQTT topic subscribed to receive sensor values.
-        /// </summary>
-        /// <value></value>
-        public string state_topic { get; set; }
     }
 }

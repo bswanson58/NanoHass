@@ -1,23 +1,14 @@
 ﻿using NanoHass.Discovery;
 using NanoHass.Hass;
 using NanoHass.Support;
-using NanoPlat.Configuration;
-using NanoPlat.Mqtt;
 
 namespace NanoHass.Context {
     public interface IHassClientContext {
         DeviceConfigModel   DeviceConfiguration { get; }
         string              DeviceIdentifier { get; }
 
-        string              ServerAddress { get; }
-        string              UserName { get; }
-        string              Password { get; }
-        bool                UseMqttRetainFlag { get; }
-
         string              OnlinePayload { get; }
         string              OfflinePayload { get; }
-        string              LastWillTopic { get; }
-        string              LastWillPayload { get; }
 
         string              DeviceAvailabilityTopic();
         string              DeviceMessageSubscriptionTopic();
@@ -27,23 +18,15 @@ namespace NanoHass.Context {
     }
 
     public class HassClientContext : IHassClientContext {
-        private readonly MqttConfiguration  mMqttConfiguration;
         private readonly HassConfiguration  mHassConfiguration;
 
         public  DeviceConfigModel           DeviceConfiguration { get; }
         public  string                      DeviceIdentifier => mHassConfiguration.DeviceIdentifier;
 
-        public  string                      ServerAddress => mMqttConfiguration.BrokerAddress;
-        public  string                      UserName => mMqttConfiguration.Username;
-        public  string                      Password => mMqttConfiguration.Password;
-        public  bool                        UseMqttRetainFlag => mMqttConfiguration.PublishRetain;
-
         public  string                      OnlinePayload => mHassConfiguration.PayloadAvailable;
         public  string                      OfflinePayload => mHassConfiguration.PayloadNotAvailable;
 
-        public HassClientContext( IConfigurationManager configuration, HassDeviceOptions options ) {
-            mMqttConfiguration =
-                (MqttConfiguration)configuration.GetConfiguration( MqttConfiguration.ConfigurationName, typeof( MqttConfiguration ));
+        public HassClientContext( HassDeviceOptions options ) {
             mHassConfiguration = options.Configuration;
 
             DeviceConfiguration = new DeviceConfigModel {
@@ -51,7 +34,10 @@ namespace NanoHass.Context {
                 name = options.Configuration.DeviceName,
                 identifiers = new []{ options.Configuration.DeviceIdentifier },
                 model = options.Configuration.Model,
-                sw_version = options.Configuration.Version
+                sw_version = options.Configuration.SoftwareVersion,
+                hw_version = options.Configuration.HardwareVersion,
+                configuration_url = options.Configuration.ConfigurationUrl,
+                suggested_area = options.Configuration.SuggestedArea
             };
         }
 

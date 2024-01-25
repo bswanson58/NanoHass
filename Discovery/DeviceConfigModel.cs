@@ -44,11 +44,27 @@ namespace NanoHass.Discovery {
         public string sw_version { get; set; }
 
         /// <summary>
+        /// (Optional) The hardware version of the device.
+        /// </summary>
+        public string hw_version { get; set; }
+
+        /// <summary>
+        /// (Optional) Suggest an area if the device isn’t in one yet.
+        /// </summary>
+        public string suggested_area { get; set; }
+
+        /// <summary>
+        /// (Optional) A link to the webpage that can manage the configuration of this device.
+        /// Can be either an http://, https:// or an internal homeassistant:// URL.
+        /// </summary>
+        public string configuration_url { get; set; }
+
+        /// <summary>
         /// (Optional) Identifier of a device that routes messages between this device and Home Assistant.
         /// Examples of such devices are hubs, or parent devices of a sub-device.
         /// This is used to show device topology in Home Assistant.
         /// </summary>
         /// <value></value>
-//        public string via_device { get; set; }
+        public string via_device { get; set; }
     }
 }

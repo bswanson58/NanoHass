@@ -2,7 +2,6 @@
 using NanoPlat.Mqtt;
 using System;
 using Microsoft.Extensions.Logging;
-using nanoFramework.Json;
 using NanoHass.Discovery;
 using NanoHass.Models;
 using NanoPlat.Logging;
@@ -91,15 +90,11 @@ namespace NanoHass.Hass {
             }
 
             try {
-                var topic = ClientContext.SensorConfigurationTopic( discoverable.Domain, discoverable.Id );
+                var topic = ClientContext.SensorConfigurationTopic( discoverable.Domain, discoverable.EntityIdentifier );
                 var payload = String.Empty;
 
                 if(!clearConfig ) {
-                    var discoveryConfig = discoverable.GetDiscoveryModel();
-
-                    if( discoveryConfig != null ) {
-                        payload = JsonSerializer.SerializeObject( discoveryConfig );
-                    }
+                    payload = discoverable.GetDiscoveryPayload();
                 }
 
                 // Publish discovery configuration
@@ -118,18 +113,14 @@ namespace NanoHass.Hass {
                     }
                 }
 
-                var combinedState = device.GetCombinedState();
+                var deviceState = device.GetState();
                 var attributes = device.GetAttributes();
 
                 if( respectChecks ) {
-                    if(( device.PreviousPublishedState == combinedState ) &&
+                    if(( device.PreviousPublishedState == deviceState ) &&
                        ( device.PreviousPublishedAttributes == attributes )) {
                         return;
                     }
-                }
-
-                if( device.GetDiscoveryModel() is not SensorDiscoveryModel autoDiscoConfig ) {
-                    return;
                 }
 
                 foreach( var state in device.GetStatesToPublish()) {
@@ -145,7 +136,7 @@ namespace NanoHass.Hass {
                 // only store the values if the checks are respected
                 // otherwise, we might stay in 'unknown' state until the value changes
                 if( respectChecks ) {
-                    device.UpdatePublishedState( combinedState, attributes );
+                    device.UpdatePublishedState( deviceState, attributes );
                 }
             }
             catch( Exception ex ) {
