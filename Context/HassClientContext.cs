@@ -13,8 +13,9 @@ namespace NanoHass.Context {
         string              DeviceAvailabilityTopic();
         string              DeviceMessageSubscriptionTopic();
 
-        string              SensorConfigurationTopic( string forDomain, string sensorName );
-        string              SensorStateTopic( string forDomain, string sensorName );
+        string              EntityTopic( string forDomain, string entityIdentifier );
+        string              EntityConfigurationTopic( string forDomain, string entityIdentifier );
+        string              EntityStateTopic( string forDomain, string entityIdentifier );
     }
 
     public class HassClientContext : IHassClientContext {
@@ -47,14 +48,17 @@ namespace NanoHass.Context {
         public string LastWillPayload =>
             mHassConfiguration.PayloadNotAvailable;
 
-        private string SensorTopic( string forDomain ) =>
+        private string DeviceTopic( string forDomain ) =>
             $"{mHassConfiguration.DiscoveryPrefix}/{forDomain}/{mHassConfiguration.DeviceIdentifier}";
 
-        public string SensorStateTopic( string forDomain, string sensorName ) =>
-            $"{SensorTopic( forDomain )}/{sensorName}/{Constants.State}";
+        public string EntityTopic( string forDomain, string entityIdentifier ) =>
+            $"{DeviceTopic( forDomain )}/{entityIdentifier}";
 
-        public string SensorConfigurationTopic( string forDomain, string sensorName ) =>
-            $"{SensorTopic( forDomain )}/{sensorName}/{Constants.Configuration}";
+        public string EntityStateTopic( string forDomain, string entityIdentifier ) =>
+            $"{EntityTopic( forDomain, entityIdentifier)}/{Constants.State}";
+
+        public string EntityConfigurationTopic( string forDomain, string entityIdentifier ) =>
+            $"{DeviceTopic( forDomain )}/{entityIdentifier}/{Constants.Configuration}";
 
         public string DeviceAvailabilityTopic() =>
             $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";

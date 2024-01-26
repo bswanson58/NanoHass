@@ -90,7 +90,7 @@ namespace NanoHass.Hass {
             }
 
             try {
-                var topic = ClientContext.SensorConfigurationTopic( discoverable.Domain, discoverable.EntityIdentifier );
+                var topic = ClientContext.EntityConfigurationTopic( discoverable.Domain, discoverable.EntityIdentifier );
                 var payload = String.Empty;
 
                 if(!clearConfig ) {
