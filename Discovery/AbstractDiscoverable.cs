@@ -38,6 +38,7 @@ namespace NanoHass.Discovery {
 
         public virtual string                   GetAttributes() => String.Empty;
         public virtual bool                     ProcessMessage( string topic, string payload ) => false;
+        public virtual string                   GetSubscriptionTopic() => String.Empty;
 
         protected abstract BaseDiscoveryModel   CreateDiscoveryModel();
         public abstract string                  GetDiscoveryPayload();

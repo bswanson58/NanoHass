@@ -23,10 +23,15 @@
     <Compile Include="Discovery\BaseDiscoveryModel.cs" />
     <Compile Include="Discovery\BinarySensorDiscoveryModel.cs" />
     <Compile Include="Discovery\DeviceConfigModel.cs" />
+    <Compile Include="Discovery\LightDiscoveryModel.cs" />
     <Compile Include="Discovery\SensorDiscoveryModel.cs" />
     <Compile Include="Hass\DeviceBuilderExtension.cs" />
     <Compile Include="Hass\HassConfiguration.cs" />
     <Compile Include="Hass\HassMqttManager.cs" />
+    <Compile Include="Lighting\BaseLight.cs" />
+    <Compile Include="Lighting\LightConfiguration.cs" />
+    <Compile Include="Lighting\LightManager.cs" />
+    <Compile Include="Lighting\RgbLight.cs" />
     <Compile Include="Models\DeviceTopicState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sensors\BaseSensor.cs" />

@@ -10,6 +10,7 @@ namespace NanoHass.Context {
         string              OnlinePayload { get; }
         string              OfflinePayload { get; }
 
+        string              DeviceTopic( string forDomain );
         string              DeviceAvailabilityTopic();
         string              DeviceMessageSubscriptionTopic();
 
@@ -48,7 +49,7 @@ namespace NanoHass.Context {
         public string LastWillPayload =>
             mHassConfiguration.PayloadNotAvailable;
 
-        private string DeviceTopic( string forDomain ) =>
+        public string DeviceTopic( string forDomain ) =>
             $"{mHassConfiguration.DiscoveryPrefix}/{forDomain}/{mHassConfiguration.DeviceIdentifier}";
 
         public string EntityTopic( string forDomain, string entityIdentifier ) =>
@@ -64,6 +65,6 @@ namespace NanoHass.Context {
             $"{mHassConfiguration.DiscoveryPrefix}/{mHassConfiguration.DeviceIdentifier}/{mHassConfiguration.Availability}";
 
         public string DeviceMessageSubscriptionTopic() =>
-            $"{mHassConfiguration.DiscoveryPrefix}/+/{DeviceConfiguration.name}/#";
+            $"{mHassConfiguration.DiscoveryPrefix}/+/{mHassConfiguration.DeviceIdentifier}/#";
     }
 }

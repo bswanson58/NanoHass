@@ -5,9 +5,11 @@
 
         public  static readonly string      SensorDomain = "sensor";
         public  static readonly string      BinarySensorDomain = "binary_sensor";
+        public  static readonly string      LightDomain = "light";
 
         public  static readonly string      Availability = "availability";
         public  static readonly string      Configuration = "config";
+        public  static readonly string      Brightness = "brightness";
         public  static readonly string      State = "state";
         public  static readonly string      Online = "online";
         public  static readonly string      Offline = "offline";

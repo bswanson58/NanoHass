@@ -32,7 +32,7 @@ namespace NanoHass.Sensors {
 
             mLogger = log.SetLogLevel( nameof( SensorManager ));
 
-            foreach( var device in devices.GetDevices()) {
+            foreach( var device in devices.GetSensors()) {
                 if( device is SensorConfiguration sensor ) {
                     AddSensor( new Sensor( sensor ));
                 }
