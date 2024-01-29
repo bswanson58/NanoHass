@@ -27,6 +27,7 @@
     <Compile Include="Discovery\SensorDiscoveryModel.cs" />
     <Compile Include="Hass\DeviceBuilderExtension.cs" />
     <Compile Include="Hass\HassConfiguration.cs" />
+    <Compile Include="Hass\HassDeviceFactory.cs" />
     <Compile Include="Hass\HassMqttManager.cs" />
     <Compile Include="Hass\IHassEntity.cs" />
     <Compile Include="Lighting\BaseLight.cs" />

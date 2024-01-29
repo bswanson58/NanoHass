@@ -11,6 +11,7 @@ using NanoPlat.Mqtt;
 
 namespace NanoHass.Lighting {
     public interface ILightManager {
+        void        AddLight( LightConfiguration configuration );
         void        AddLight( BaseLight sensor );
         IHassEntity GetLight( string entityIdentifier );
 
@@ -22,14 +23,17 @@ namespace NanoHass.Lighting {
         private readonly IMqttManager       mMqttManager;
         private readonly IHassManager       mHassManager;
         private readonly IHassClientContext mClientContext;
+        private readonly IHassDeviceFactory mDeviceFactory;
         private readonly ITaskScheduler     mTaskScheduler;
         private readonly ILogger            mLogger;
         private readonly ArrayList          mLights;
         private DateTime                    mLastAutoDiscoPublish;
 
         public LightManager( IHassManager hassManager, HassDeviceOptions devices, IHassClientContext clientContext,
-                             ITaskScheduler taskScheduler, IMqttManager mqttManager, ILoggerEx log ) {
+                             IHassDeviceFactory deviceFactory, ITaskScheduler taskScheduler, IMqttManager mqttManager,
+                             ILoggerEx log ) {
             mHassManager = hassManager;
+            mDeviceFactory = deviceFactory;
             mClientContext = clientContext;
             mTaskScheduler = taskScheduler;
 
@@ -42,9 +46,17 @@ namespace NanoHass.Lighting {
             mLogger = log.SetLogLevel( nameof( LightManager ));
 
             foreach( var device in devices.GetLights()) {
-                if( device is LightConfiguration light ) {
-                    AddLight( new HslLight( light ));
+                if( device is LightConfiguration configuration ) {
+                    AddLight( configuration );
                 }
+            }
+        }
+
+        public void AddLight( LightConfiguration configuration ) {
+            var light = mDeviceFactory.CreateLight( configuration );
+
+            if( light != null ) {
+                AddLight( light );
             }
         }
 

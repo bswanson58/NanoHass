@@ -24,5 +24,8 @@
         public  static readonly string      OffState = "OFF";
 
         public  static readonly string      PayloadValue = "value";
+
+        public  static readonly string      HslLightType = "hsl";
+        public  static readonly string      RgbLightType = "rgb";
     }
 }

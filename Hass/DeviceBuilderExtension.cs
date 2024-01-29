@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using NanoHass.Context;
 using NanoHass.Lighting;
@@ -34,12 +35,13 @@ namespace NanoHass.Hass {
     public delegate void ConfigurationHassDeviceDelegate( HassDeviceOptions options );
 
     public static class DeviceBuilderExtension {
-        public static IDeviceBuilder AddHassEntities( this IDeviceBuilder builder,
+        public static IDeviceBuilder AddHassEntities( this IDeviceBuilder builder, Type hassDeviceFactory,
                                                       ConfigurationHassDeviceDelegate configurationAction) {
             var options = new HassDeviceOptions();
 
             configurationAction( options );
 
+            builder.Services.AddSingleton( typeof( IHassDeviceFactory ), hassDeviceFactory );
             builder.Services.AddSingleton( typeof( HassDeviceOptions ), options );
             builder.Services.AddSingleton( typeof( IHassManager ), typeof( HassMqttManager ));
             builder.Services.AddSingleton( typeof( IHassClientContext ), typeof( HassClientContext ));
