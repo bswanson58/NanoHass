@@ -2,6 +2,7 @@
 using NanoHass.Discovery;
 using NanoHass.Hass;
 using NanoHass.Support;
+using NanoPlat.Configuration;
 
 namespace NanoHass.Context {
     public interface IHassClientContext {
@@ -33,19 +34,21 @@ namespace NanoHass.Context {
 
         public  ILogger                     Logger { get; }
 
-        public HassClientContext( HassDeviceOptions options, ILogger logger ) {
-            mHassConfiguration = options.Configuration;
+        public HassClientContext( IConfigurationManager configuration, ILogger logger ) {
             Logger = logger;
 
+            mHassConfiguration =
+                (HassConfiguration)configuration.GetConfiguration( HassConfiguration.ConfigurationName, typeof( HassConfiguration ));
+
             DeviceConfiguration = new DeviceConfigModel {
-                manufacturer = options.Configuration.Manufacturer,
-                name = options.Configuration.DeviceName,
-                identifiers = new []{ options.Configuration.DeviceIdentifier },
-                model = options.Configuration.Model,
-                sw_version = options.Configuration.SoftwareVersion,
-                hw_version = options.Configuration.HardwareVersion,
-                configuration_url = options.Configuration.ConfigurationUrl,
-                suggested_area = options.Configuration.SuggestedArea
+                manufacturer = mHassConfiguration.Manufacturer,
+                name = mHassConfiguration.DeviceName,
+                identifiers = new []{ mHassConfiguration.DeviceIdentifier },
+                model = mHassConfiguration.Model,
+                sw_version = mHassConfiguration.SoftwareVersion,
+                hw_version = mHassConfiguration.HardwareVersion,
+                configuration_url = mHassConfiguration.ConfigurationUrl,
+                suggested_area = mHassConfiguration.SuggestedArea
             };
         }
 

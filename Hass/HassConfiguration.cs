@@ -1,5 +1,4 @@
-﻿using System;
-using NanoHass.Support;
+﻿using NanoHass.Support;
 using NanoPlat.Configuration.Metadata;
 
 namespace NanoHass.Hass {
@@ -38,9 +37,10 @@ namespace NanoHass.Hass {
             new ( ConfigurationName, new [] {
                 new ParameterDescription( nameof( DeviceName ), ParameterType.String, "The name of this device", 1 ),
                 new ParameterDescription( nameof( DeviceIdentifier ), ParameterType.String, "The identifier for this device", 2 ),
-                new ParameterDescription( nameof( Manufacturer ), ParameterType.String, "The manufacturer of this device", 4 ),
-                new ParameterDescription( nameof( Model ), ParameterType.String, "The model of this device", 5 ),
-                new ParameterDescription( nameof( SoftwareVersion ), ParameterType.String, "The software version of this device", 6 ),
+                new ParameterDescription( nameof( Manufacturer ), ParameterType.String, "The manufacturer of this device", 3 ),
+                new ParameterDescription( nameof( Model ), ParameterType.String, "The model of this device", 4 ),
+                new ParameterDescription( nameof( SoftwareVersion ), ParameterType.String, "The software version of this device", 5 ),
+                new ParameterDescription( nameof( HardwareVersion ), ParameterType.String, "The hardware version of this device", 6 ),
                 new ParameterDescription( nameof( DiscoveryPrefix ), ParameterType.String, "Home Assistant discovery prefix", 7 ),
                 new ParameterDescription( nameof( Availability ), ParameterType.String, "Topic string indicating device availability", 8 ),
                 new ParameterDescription( nameof( PayloadAvailable ), ParameterType.String, "Payload indicating device available", 9 ),

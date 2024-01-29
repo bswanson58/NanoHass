@@ -9,12 +9,10 @@ namespace NanoHass.Hass {
     public class HassDeviceOptions {
         private readonly ArrayList      mSensors;
         private readonly ArrayList      mLights;
-        public  HassConfiguration       Configuration { get; }
 
         public HassDeviceOptions() {
             mSensors = new ArrayList();
             mLights = new ArrayList();
-            Configuration = new HassConfiguration();
         }
 
         public void AddSensor( SensorConfiguration configuration ) =>
@@ -36,8 +34,8 @@ namespace NanoHass.Hass {
     public delegate void ConfigurationHassDeviceDelegate( HassDeviceOptions options );
 
     public static class DeviceBuilderExtension {
-        public static IDeviceBuilder AddHassIntegration( this IDeviceBuilder builder,
-                                                         ConfigurationHassDeviceDelegate configurationAction) {
+        public static IDeviceBuilder AddHassEntities( this IDeviceBuilder builder,
+                                                      ConfigurationHassDeviceDelegate configurationAction) {
             var options = new HassDeviceOptions();
 
             configurationAction( options );
