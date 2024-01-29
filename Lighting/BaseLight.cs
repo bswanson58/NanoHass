@@ -6,10 +6,12 @@ using System.Collections;
 
 namespace NanoHass.Lighting {
     public abstract class BaseLight : AbstractDiscoverable {
-        private const string    cDeviceName = "Unknown Light";
+        private const string        cDeviceName = "Unknown Light";
 
-        protected bool          mState;
-        protected int           mBrightness;
+        protected bool              mState;
+        protected int               mBrightness;
+
+        public event EventHandler   OnEntityStateChanged;
 
         protected BaseLight( LightConfiguration configuration ) : 
             base( configuration.DisplayName ?? cDeviceName, Constants.LightDomain, configuration.EntityIdentifier,
@@ -40,7 +42,7 @@ namespace NanoHass.Lighting {
                     return true;
                 }
                 if( topic.Equals( discoveryModel.command_topic )) {
-                    OnCommand( payload );
+                    OnStateCommand( payload );
 
                     return true;
                 }
@@ -49,25 +51,33 @@ namespace NanoHass.Lighting {
             return false;
         }
 
-        public override string GetState() =>
+        public override string GetStatePayload() =>
             JsonSerializer.SerializeObject(
                 new Hashtable {{ Constants.PayloadValue, mState ? Constants.OnState : Constants.OffState }});
 
-        public void SetState( bool state ) =>
+        public void SetState( bool state ) {
             mState = state;
 
-        protected string GetBrightness() =>
+            TriggerStateChange();
+        }
+
+        protected virtual void OnStateCommand( string payload ) =>
+            SetState( payload.ToUpper().Equals( Constants.OnState.ToUpper()));
+
+        protected string GetBrightnessPayload() =>
             JsonSerializer.SerializeObject(
                 new Hashtable {{ Constants.PayloadValue, mBrightness }});
         
-        public void SetBrightness( int value ) =>
+        public void SetBrightness( int value ) {
             mBrightness = value;
 
+            TriggerStateChange();
+        }
 
         protected virtual void OnBrightnessCommand( string payload ) =>
-            mBrightness = Int32.Parse( payload );
+            SetBrightness( Int32.Parse( payload ));
 
-        protected virtual void OnCommand( string payload ) =>
-            mState = payload.ToUpper().Equals( Constants.OnState.ToUpper());
+        protected void TriggerStateChange() =>
+            OnEntityStateChanged?.Invoke( this, EventArgs.Empty );
     }
 }

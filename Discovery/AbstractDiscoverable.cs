@@ -42,7 +42,7 @@ namespace NanoHass.Discovery {
 
         protected abstract BaseDiscoveryModel   CreateDiscoveryModel();
         public abstract string                  GetDiscoveryPayload();
-        public abstract string                  GetState();
+        public abstract string                  GetStatePayload();
         public abstract IList                   GetStatesToPublish();
 
         public void InitializeParameters( IHassClientContext contextProvider ) {

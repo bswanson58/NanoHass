@@ -113,7 +113,7 @@ namespace NanoHass.Hass {
                     }
                 }
 
-                var deviceState = device.GetState();
+                var deviceState = device.GetStatePayload();
                 var attributes = device.GetAttributes();
 
                 if( respectChecks ) {

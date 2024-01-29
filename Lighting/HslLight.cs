@@ -9,24 +9,32 @@ using nanoFramework.Json;
 using NanoHass.Hass;
 
 namespace NanoHass.Lighting {
-    public interface IRgbLightEntity : IHassEntity {
+    public interface IHslLightEntity : IHassEntity {
         void        SetLightState( bool state );
         bool        GetLightState();
 
         void        SetBrightness( int brightness );
         int         GetBrightness();
 
-        void        SetColor( Color color );
+        void        SetColor( int hue, int saturation );
         Color       GetColor();
+
+        int         GetHue();
+        int         GetSaturation();
     }
 
-    public class RgbLight : BaseLight, IRgbLightEntity {
+    public class HslLight : BaseLight, IHslLightEntity {
         private readonly LightConfiguration mConfiguration;
-        private Color                       mColor;
+        private int                         mHue;
+        private int                         mSaturation;
 
-        public RgbLight( LightConfiguration configuration ) :
+        public HslLight( LightConfiguration configuration ) :
             base( configuration ) {
             mConfiguration = configuration;
+
+            mHue = 0;
+            mSaturation = 100;
+            mBrightness = 50;
         }
 
         protected override BaseDiscoveryModel CreateDiscoveryModel() {
@@ -46,8 +54,8 @@ namespace NanoHass.Lighting {
                 command_topic = $"{ClientContext.EntityStateTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.Subscribe}",
                 brightness_state_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.Brightness}/{Constants.Status}",
                 brightness_command_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.Brightness}/{Constants.Subscribe}",
-                rgb_state_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.RgbColor}/{Constants.Status}",
-                rgb_command_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.RgbColor}/{Constants.Subscribe}",
+                hs_command_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.HslColor}/{Constants.Subscribe}",
+                hs_state_topic = $"{ClientContext.EntityTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.HslColor}/{Constants.Status}",
                 state_value_template = "{{value_json.value}}",
                 brightness_value_template = "{{value_json.value}}",
                 brightness_scale = 100
@@ -64,8 +72,8 @@ namespace NanoHass.Lighting {
                 if(!String.IsNullOrEmpty( discoveryModel.brightness_state_topic )) {
                     retValue.Add( new DeviceTopicState( discoveryModel.brightness_state_topic, GetBrightnessPayload()));
                 }
-                if(!String.IsNullOrEmpty( discoveryModel.rgb_state_topic )) {
-                    retValue.Add( new DeviceTopicState( discoveryModel.rgb_state_topic, GetColorPayload()));
+                if(!String.IsNullOrEmpty( discoveryModel.hs_state_topic )) {
+                    retValue.Add( new DeviceTopicState( discoveryModel.hs_state_topic, GetHsPayload()));
                 }
             }
 
@@ -81,20 +89,30 @@ namespace NanoHass.Lighting {
         public int GetBrightness() =>
             mBrightness;
 
-        public void SetColor( Color color ) {
-            mColor = color;
+        public void SetColor( int hue, int saturation ) {
+            mHue = hue;
+            mSaturation = saturation;
 
             TriggerStateChange();
         }
 
-        private string GetColorPayload() =>
+        public Color GetColor() =>
+            HslColor.FromHsl( mHue, mSaturation, GetBrightness());
+
+        public int GetHue() =>
+            mHue;
+
+        public int GetSaturation() =>
+            mSaturation;
+
+        private string GetHsPayload() =>
             JsonSerializer.SerializeObject(
-                new Hashtable {{ Constants.PayloadValue, $"{mColor.R},{mColor.G},{mColor.B}" }});
+                new Hashtable {{ Constants.PayloadValue, $"{mHue},{mSaturation}" }});
 
         public override bool ProcessMessage( string topic, string payload ) {
             if( GetDiscoveryModel() is LightDiscoveryModel discoveryModel ) {
-                if( topic.Equals( discoveryModel.rgb_command_topic )) {
-                    OnRgbCommand( payload );
+                if( topic.Equals( discoveryModel.hs_command_topic )) {
+                    OnHsCommand( payload );
 
                     return true;
                 }
@@ -103,28 +121,19 @@ namespace NanoHass.Lighting {
             return base.ProcessMessage( topic, payload );
         }
 
-        private void OnRgbCommand( string payload ) {
+        private void OnHsCommand( string payload ) {
             if(!String.IsNullOrEmpty( payload )) {
                 var colors = payload.Split( ',' );
                 
-                if( colors.Length == 3 ) {
+                if( colors.Length == 2 ) {
                     try {
-                        var red = Int16.Parse( colors[0]);
-                        var green = Int16.Parse( colors[1]);
-                        var blue = Int16.Parse( colors[2]);
-
-                        mColor = Color.FromArgb( GetBrightness(), red, green, blue );
-
-                        TriggerStateChange();
+                        SetColor((int)float.Parse( colors[0]), (int)float.Parse( colors[1]));
                     }
                     catch( Exception ex ) {
-                        ClientContext.Logger.Log( LogLevel.Error, ex, "Parsing RGB color payload" );
+                        ClientContext.Logger.Log( LogLevel.Error, ex, "Parsing HSL color payload" );
                     }
                 }
             }
         }
-
-        public Color GetColor() =>
-            mColor;
     }
 }

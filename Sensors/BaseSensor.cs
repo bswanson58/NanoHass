@@ -28,14 +28,14 @@ namespace NanoHass.Sensors {
 
             if( GetDiscoveryModel() is  { } discoveryModel ) {
                 if(!String.IsNullOrEmpty( discoveryModel.state_topic )) {
-                    retValue.Add( new DeviceTopicState( discoveryModel.state_topic, GetState()));
+                    retValue.Add( new DeviceTopicState( discoveryModel.state_topic, GetStatePayload()));
                 }
             }
 
             return retValue;
         }
 
-        public override string GetState() =>
+        public override string GetStatePayload() =>
             JsonSerializer.SerializeObject( new Hashtable {{ Constants.PayloadValue, mState }});
 
         public void SetState( string value ) =>

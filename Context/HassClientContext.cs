@@ -1,4 +1,5 @@
-﻿using NanoHass.Discovery;
+﻿using Microsoft.Extensions.Logging;
+using NanoHass.Discovery;
 using NanoHass.Hass;
 using NanoHass.Support;
 
@@ -17,6 +18,8 @@ namespace NanoHass.Context {
         string              EntityTopic( string forDomain, string entityIdentifier );
         string              EntityConfigurationTopic( string forDomain, string entityIdentifier );
         string              EntityStateTopic( string forDomain, string entityIdentifier );
+
+        ILogger             Logger { get; }
     }
 
     public class HassClientContext : IHassClientContext {
@@ -28,8 +31,11 @@ namespace NanoHass.Context {
         public  string                      OnlinePayload => mHassConfiguration.PayloadAvailable;
         public  string                      OfflinePayload => mHassConfiguration.PayloadNotAvailable;
 
-        public HassClientContext( HassDeviceOptions options ) {
+        public  ILogger                     Logger { get; }
+
+        public HassClientContext( HassDeviceOptions options, ILogger logger ) {
             mHassConfiguration = options.Configuration;
+            Logger = logger;
 
             DeviceConfiguration = new DeviceConfigModel {
                 manufacturer = options.Configuration.Manufacturer,

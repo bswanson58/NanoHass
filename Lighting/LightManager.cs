@@ -11,13 +11,11 @@ using NanoPlat.Mqtt;
 
 namespace NanoHass.Lighting {
     public interface ILightManager {
-        void    AddLight( BaseLight sensor );
+        void        AddLight( BaseLight sensor );
+        IHassEntity GetLight( string entityIdentifier );
 
-        void    StartUpdating();
-        void    StopUpdating();
-
-        void    UpdateLightState( string entityIdentifier, bool state );
-        void    UpdateLightBrightness( string entityIdentifier, int value );
+        void        StartUpdating();
+        void        StopUpdating();
     }
 
     public class LightManager : ILightManager {
@@ -45,7 +43,7 @@ namespace NanoHass.Lighting {
 
             foreach( var device in devices.GetLights()) {
                 if( device is LightConfiguration light ) {
-                    AddLight( new RgbLight( light ));
+                    AddLight( new HslLight( light ));
                 }
             }
         }
@@ -67,15 +65,33 @@ namespace NanoHass.Lighting {
 
         private void OnMessageReceived( object sender, EventArgs e ) {
             if( e is MqttMessageArgs message ) {
-                mLogger.Log( LogLevel.Information, message.Topic );
-                if( message.Topic.StartsWith( mClientContext.DeviceTopic( Constants.LightDomain ))) {
-                    foreach( var device in mLights ) {
-                        if( device is BaseLight light ) {
-                            light.ProcessMessage( message.Topic, message.Message );
+                try {
+                    if( message.Topic.StartsWith( mClientContext.DeviceTopic( Constants.LightDomain ))) {
+                        mLogger.Log( LogLevel.Trace, message.Topic );
+
+                        foreach( var device in mLights ) {
+                            if( device is BaseLight light ) {
+                                light.ProcessMessage( message.Topic, message.Message );
+                            }
                         }
                     }
                 }
+                catch( Exception ex ) {
+                    mLogger.Log( LogLevel.Error, ex, $"Processing message: '{message.Topic}'" );
+                }
             }
+        }
+
+        public IHassEntity GetLight( string entityIdentifier ) {
+            foreach( var item in mLights ) {
+                if( item is BaseLight light ) {
+                    if( light.EntityIdentifier.Equals( entityIdentifier )) {
+                        return light as IHassEntity;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public void UpdateLightState( string entityIdentifier, bool state ) {
