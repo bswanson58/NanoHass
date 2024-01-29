@@ -83,7 +83,9 @@ namespace NanoHass.Lighting {
 
                         foreach( var device in mLights ) {
                             if( device is BaseLight light ) {
-                                light.ProcessMessage( message.Topic, message.Message );
+                                if( light.ProcessMessage( message.Topic, message.Message )) {
+                                    mHassManager.PublishState( light, false );
+                                }
                             }
                         }
                     }
@@ -104,26 +106,6 @@ namespace NanoHass.Lighting {
             }
 
             return null;
-        }
-
-        public void UpdateLightState( string entityIdentifier, bool state ) {
-            foreach( var item in mLights ) {
-                if( item is BaseLight light ) {
-                    if( light.EntityIdentifier.Equals( entityIdentifier )) {
-                        light.SetState( state );
-                    }
-                }
-            }
-        }
-
-        public void UpdateLightBrightness( string entityIdentifier, int value ) {
-            foreach( var item in mLights ) {
-                if( item is BaseLight light ) {
-                    if( light.EntityIdentifier.Equals( entityIdentifier )) {
-                        light.SetBrightness( value );
-                    }
-                }
-            }
         }
 
         private void UpdateLights() {

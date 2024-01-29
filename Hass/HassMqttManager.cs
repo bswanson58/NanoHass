@@ -16,7 +16,7 @@ namespace NanoHass.Hass {
 
         void    PublishDiscoveryConfiguration( AbstractDiscoverable discoverable );
         void    RevokeDiscoveryConfiguration( AbstractDiscoverable discoverable );
-        void    PublishState( AbstractDiscoverable device, bool respectChecks = true );
+        void    PublishState( AbstractDiscoverable device, bool respectUpdateTime = true );
 
         IHassClientContext  ClientContext { get; }
     }
@@ -105,9 +105,9 @@ namespace NanoHass.Hass {
             }
         }
 
-        public void PublishState( AbstractDiscoverable device, bool respectChecks = true ) {
+        public void PublishState( AbstractDiscoverable device, bool respectUpdateTime = true ) {
             try {
-                if( respectChecks ) {
+                if( respectUpdateTime ) {
                     if( device.LastUpdated.AddSeconds( device.UpdateIntervalSeconds ) > DateTime.UtcNow ) {
                         return;
                     }
@@ -116,11 +116,9 @@ namespace NanoHass.Hass {
                 var deviceState = device.GetStatePayload();
                 var attributes = device.GetAttributes();
 
-                if( respectChecks ) {
-                    if(( device.PreviousPublishedState == deviceState ) &&
-                       ( device.PreviousPublishedAttributes == attributes )) {
-                        return;
-                    }
+                if(( device.PreviousPublishedState == deviceState ) &&
+                   ( device.PreviousPublishedAttributes == attributes )) {
+                    return;
                 }
 
                 foreach( var state in device.GetStatesToPublish()) {
@@ -133,11 +131,7 @@ namespace NanoHass.Hass {
 //                    mMqttManager.Publish( autoDiscoConfig.json_attributes_topic, attributes );
 //                }
 
-                // only store the values if the checks are respected
-                // otherwise, we might stay in 'unknown' state until the value changes
-                if( respectChecks ) {
-                    device.UpdatePublishedState( deviceState, attributes );
-                }
+                device.UpdatePublishedState( deviceState, attributes );
             }
             catch( Exception ex ) {
                 mLog.Log( LogLevel.Error, $"Sensor '{device.Name}' - Error publishing state", ex );
