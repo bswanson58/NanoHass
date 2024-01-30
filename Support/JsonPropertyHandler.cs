@@ -3,6 +3,7 @@ using System.Collections;
 using System.Text;
 using nanoFramework.Json;
 using NanoHass.Discovery;
+using NanoHass.Inputs;
 
 namespace NanoHass.Support {
     /// <summary>
@@ -196,6 +197,44 @@ namespace NanoHass.Support {
                 .AddProperty( nameof( model.xy_command_topic ), model.xy_command_topic )
                 .AddProperty( nameof( model.xy_state_topic ), model.xy_state_topic )
                 .AddProperty( nameof( model.xy_value_template ), model.xy_value_template )
+                .AddProperty( nameof( model.device ), "_____" );
+
+            return new StringBuilder( retValue.AsJson())
+                .Replace( "\"_____\"", model.device.AsJson())
+                .ToString();
+        }
+    }
+
+    internal static class NumberDiscoveryModelEx {
+        public static string AsJson( this NumberDiscoveryModel model ) {
+            var retValue = new JsonPropertyHandler();
+
+            retValue
+                .AddProperty( nameof( model.availability_mode ), model.availability_mode )
+                .AddProperty( nameof( model.availability_topic ), model.availability_topic )
+                .AddProperty( nameof( model.command_template ), model.command_template )
+                .AddProperty( nameof( model.command_topic ), model.command_topic )
+                .AddProperty( nameof( model.device_class ), model.device_class )
+                .AddProperty( nameof( model.enabled_by_default ), model.enabled_by_default, true )
+                .AddProperty( nameof( model.encoding ), model.encoding )
+                .AddProperty( nameof( model.entity_category ), model.entity_category )
+                .AddProperty( nameof( model.icon ), model.icon )
+                .AddProperty( nameof( model.json_attributes_template ), model.json_attributes_topic )
+                .AddProperty( nameof( model.json_attributes_topic ), model.json_attributes_topic )
+                .AddProperty( nameof( model.mode ), model.mode, "auto" )
+                .AddProperty( nameof( model.max ), model.max, 100 )
+                .AddProperty( nameof( model.min ), model.min, 1 )
+                .AddProperty( nameof( model.name ), model.name )
+                .AddProperty( nameof( model.object_id ), model.object_id )
+                .AddProperty( nameof( model.optimistic ), model.optimistic, true )
+                .AddProperty( nameof( model.payload_reset ), model.payload_reset, "None" )
+                .AddProperty( nameof( model.qos ), model.qos, 0 )
+                .AddProperty( nameof( model.retain ), model.retain, false )
+                .AddProperty( nameof( model.state_topic ), model.state_topic )
+                .AddProperty( nameof( model.step ), model.step, 1 )
+                .AddProperty( nameof( model.unique_id ), model.unique_id )
+                .AddProperty( nameof( model.unit_of_measurement ), model.unit_of_measurement )
+                .AddProperty( nameof( model.value_template ), model.value_template )
                 .AddProperty( nameof( model.device ), "_____" );
 
             return new StringBuilder( retValue.AsJson())

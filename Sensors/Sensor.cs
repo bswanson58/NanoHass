@@ -18,7 +18,7 @@ namespace NanoHass.Sensors {
 
             return new SensorDiscoveryModel {
                 availability_topic = ClientContext.DeviceAvailabilityTopic(),
-                state_topic = $"{ClientContext.EntityStateTopic( Domain, mConfiguration.EntityIdentifier )}",
+                state_topic = $"{ClientContext.EntityStateTopic( Domain, mConfiguration.EntityIdentifier )}/{Constants.Status}",
                 name = Name,
                 unique_id = mConfiguration.UniqueIdentifier,
                 object_id = $"{ClientContext.DeviceIdentifier}_{mConfiguration.EntityIdentifier}",

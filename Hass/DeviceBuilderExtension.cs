@@ -2,6 +2,7 @@
 using System.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using NanoHass.Context;
+using NanoHass.Inputs;
 using NanoHass.Lighting;
 using NanoHass.Sensors;
 using NanoPlat.Builder;
@@ -10,10 +11,12 @@ namespace NanoHass.Hass {
     public class HassDeviceOptions {
         private readonly ArrayList      mSensors;
         private readonly ArrayList      mLights;
+        private readonly ArrayList      mInputs;
 
         public HassDeviceOptions() {
             mSensors = new ArrayList();
             mLights = new ArrayList();
+            mInputs = new ArrayList();
         }
 
         public void AddSensor( SensorConfiguration configuration ) =>
@@ -22,11 +25,17 @@ namespace NanoHass.Hass {
         public void AddBinarySensor( BinarySensorConfiguration configuration ) =>
             mSensors.Add( configuration );
 
+        public void AddInput( IntegerNumberConfiguration configuration ) =>
+            mInputs.Add( configuration );
+
         public void AddLight( LightConfiguration configuration ) =>
             mLights.Add( configuration );
 
         public ArrayList GetSensors() =>
             mSensors;
+
+        public ArrayList GetInputs() =>
+            mInputs;
 
         public ArrayList GetLights() =>
             mLights;
@@ -45,6 +54,7 @@ namespace NanoHass.Hass {
             builder.Services.AddSingleton( typeof( HassDeviceOptions ), options );
             builder.Services.AddSingleton( typeof( IHassManager ), typeof( HassMqttManager ));
             builder.Services.AddSingleton( typeof( IHassClientContext ), typeof( HassClientContext ));
+            builder.Services.AddSingleton( typeof( IInputManager ), typeof( InputManager ));
             builder.Services.AddSingleton( typeof( ILightManager ), typeof( LightManager ));
             builder.Services.AddSingleton( typeof( ISensorManager ), typeof( SensorManager ));
 

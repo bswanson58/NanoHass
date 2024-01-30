@@ -6,6 +6,7 @@
         public  static readonly string      SensorDomain = "sensor";
         public  static readonly string      BinarySensorDomain = "binary_sensor";
         public  static readonly string      LightDomain = "light";
+        public  static readonly string      NumberDomain = "number";
 
         public  static readonly string      Availability = "availability";
         public  static readonly string      Configuration = "config";

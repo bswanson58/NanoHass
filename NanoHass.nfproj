@@ -30,6 +30,11 @@
     <Compile Include="Hass\HassDeviceFactory.cs" />
     <Compile Include="Hass\HassMqttManager.cs" />
     <Compile Include="Hass\IHassEntity.cs" />
+    <Compile Include="Inputs\BaseInput.cs" />
+    <Compile Include="Inputs\InputManager.cs" />
+    <Compile Include="Inputs\IntegerNumber.cs" />
+    <Compile Include="Inputs\IntegerNumberConfiguration.cs" />
+    <Compile Include="Inputs\NumberDiscoveryModel.cs" />
     <Compile Include="Lighting\BaseLight.cs" />
     <Compile Include="Lighting\HslLight.cs" />
     <Compile Include="Lighting\LightConfiguration.cs" />
